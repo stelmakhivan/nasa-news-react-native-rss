@@ -3,8 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   mainViewStyle: {
     flex: 1,
-    paddingTop: 35,
-    paddingBottom: 35,
+    paddingTop: 25,
   },
   activityIndicatorStyle: {
     flex: 1,
