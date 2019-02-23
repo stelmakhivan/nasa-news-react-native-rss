@@ -25,6 +25,7 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": ""
+    "description": "Get news from NASA RSS",
+    "githubUrl": "https://github.com/stelmakhivan/nasa-news-react-native-rss"
   }
 }
