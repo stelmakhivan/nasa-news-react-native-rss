@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View, ScrollView, Image } from 'react-native';
+import shortid from 'shortid';
 
 import styles from './styles';
 
@@ -8,10 +9,10 @@ const Carousel = props => {
   const { images } = props;
 
   return (
-    <View style={styles.scrollContainer}>
+    <View>
       <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
         {images.map(image => (
-          <Image key={Date.now()} style={styles.image} source={{ uri: image }} />
+          <Image key={shortid.generate()} style={styles.image} source={{ uri: image }} />
         ))}
       </ScrollView>
     </View>

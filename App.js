@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, ActivityIndicator } from 'react-native';
+import { View, FlatList, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
 
 import getNews from './app/helpers';
 
@@ -25,7 +25,14 @@ export default class App extends React.Component {
 
   fetchNews = () => {
     getNews()
-      .then(articles => this.setState({ articles, refreshing: false, isLoading: false }))
+      .then(articles =>
+        this.setState({
+          articles,
+          refreshing: false,
+          isLoading: false,
+          images: articles.slice(0, 3).map(({ enclosures }) => enclosures[0].url),
+        })
+      )
       .catch(() => this.setState({ refreshing: false }));
   };
 
@@ -42,10 +49,6 @@ export default class App extends React.Component {
     const { articles, refreshing, isLoading, images } = this.state;
     const { mainViewStyle, activityIndicatorStyle } = styles;
 
-    if (!isLoading) {
-      articles.slice(0, 3).map(({ enclosures }) => images.push(enclosures[0].url));
-    }
-
     return (
       <View style={mainViewStyle}>
         {isLoading ? (
@@ -53,16 +56,18 @@ export default class App extends React.Component {
             <ActivityIndicator size="large" color="#0000ff" />
           </View>
         ) : (
-          <View>
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={this.handleRefresh} />
+            }
+          >
             <Carousel images={images} />
             <FlatList
               data={articles}
               renderItem={({ item }) => <Articles article={item} />}
               keyExtractor={item => item.links[0].url}
-              refreshing={refreshing}
-              onRefresh={this.handleRefresh}
             />
-          </View>
+          </ScrollView>
         )}
       </View>
     );
