@@ -4,6 +4,7 @@ import { View, FlatList, ActivityIndicator } from 'react-native';
 import getNews from './app/helpers';
 
 import Articles from './app/components/Articles';
+import Carousel from './app/components/Carousel';
 
 import styles from './App.styles';
 
@@ -14,6 +15,7 @@ export default class App extends React.Component {
       articles: [],
       refreshing: true,
       isLoading: true,
+      images: [],
     };
   }
 
@@ -37,8 +39,13 @@ export default class App extends React.Component {
   };
 
   render() {
-    const { articles, refreshing, isLoading } = this.state;
+    const { articles, refreshing, isLoading, images } = this.state;
     const { mainViewStyle, activityIndicatorStyle } = styles;
+
+    if (!isLoading) {
+      articles.slice(0, 3).map(({ enclosures }) => images.push(enclosures[0].url));
+    }
+
     return (
       <View style={mainViewStyle}>
         {isLoading ? (
@@ -46,13 +53,16 @@ export default class App extends React.Component {
             <ActivityIndicator size="large" color="#0000ff" />
           </View>
         ) : (
-          <FlatList
-            data={articles}
-            renderItem={({ item }) => <Articles article={item} />}
-            keyExtractor={item => item.links[0].url}
-            refreshing={refreshing}
-            onRefresh={this.handleRefresh}
-          />
+          <View>
+            <Carousel images={images} />
+            <FlatList
+              data={articles}
+              renderItem={({ item }) => <Articles article={item} />}
+              keyExtractor={item => item.links[0].url}
+              refreshing={refreshing}
+              onRefresh={this.handleRefresh}
+            />
+          </View>
         )}
       </View>
     );
